@@ -11,9 +11,13 @@ repositories {
 }
 
 apply plugin: 'java'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
+
+version = '1.1.0'
+group = 'com.bamboo.packer'
 
 dependencies {
 }
@@ -30,5 +34,14 @@ task fatJar(type: Jar) {
     with jar
 }
 
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: 'file://' + project.rootProject.rootDir + File.separator + 'tmp')
+        pom.groupId = project.group
+        pom.artifactId = project.name
+        pom.version = project.version
+    }
+}
 // apply from: '../jar.gradle'
-apply from: '../gradle-mvn-push.gradle'
+//apply from: '../gradle-mvn-push.gradle'
+//apply from: '../gradle/java_publish.gradle'

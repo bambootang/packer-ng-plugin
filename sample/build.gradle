@@ -2,7 +2,7 @@ buildscript {
     ext.packer_version = '1.0.9'
 
     repositories {
-        maven { url "file://" + project.rootProject.rootDir + '/tmp/repo/' }
+//        maven { url "file://" + project.rootProject.rootDir + '/tmp/repo/' }
         jcenter()
 //        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }

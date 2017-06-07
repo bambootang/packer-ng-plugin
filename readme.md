@@ -37,7 +37,7 @@ buildscript {
 	......
 	dependencies{
 	// add packer-ng
-		classpath 'com.mcxiaoke.gradle:packer-ng:1.0.9'
+		classpath 'com.bamboo.packer:helper:1.0.9'
 	}
 }  
 ```

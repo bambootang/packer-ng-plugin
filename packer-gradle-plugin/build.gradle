@@ -1,0 +1,39 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+version = '1.1.0'
+group = 'com.bamboo.packer'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile localGroovy()
+    compile gradleApi()
+//    compile 'com.mcxiaoke.gradle:packer-helper:1.0.9'
+    compile project(':packer-helper')
+    compile 'com.android.tools.build:gradle:2.3.0'
+}
+
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: 'file://' + project.rootProject.rootDir + File.separator + 'tmp')
+        pom.groupId = project.group
+        pom.artifactId = project.name
+        pom.version = project.version
+    }
+}
+
+//apply from: '../gradle-mvn-push.gradle'
+//apply from: '../gradle/java_publish.gradle'
+
