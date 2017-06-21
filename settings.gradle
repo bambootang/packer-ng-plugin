@@ -1,3 +1,3 @@
 include ':packer-gradle-plugin'
 include ':packer-helper'
-//include ':sample'
+include ':sample'

@@ -1,20 +1,20 @@
 buildscript {
-    ext.packer_version = '1.0.9'
+    ext.packer_version = '1.1.0'
 
     repositories {
-//        maven { url "file://" + project.rootProject.rootDir + '/tmp/repo/' }
+        maven { url "file://" + project.rootProject.rootDir + '/tmp/' }
         jcenter()
 //        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
-        classpath "com.mcxiaoke.gradle:packer-ng:$packer_version"
+        classpath "com.bamboo.packer:packer-gradle-plugin:$packer_version"
     }
 }
 
 repositories {
-    maven { url "file://" + project.rootProject.rootDir + '/tmp/repo/' }
+    maven { url "file://" + project.rootProject.rootDir + '/tmp/' }
     jcenter()
 //    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
@@ -44,7 +44,6 @@ android {
             storePassword "android"
             keyAlias "android"
             keyPassword "android"
-            v2SigningEnabled false
         }
     }
 
@@ -110,7 +109,7 @@ packer {
 
 dependencies {
     // compile project(':helper')
-    compile "com.mcxiaoke.gradle:packer-helper:$packer_version"
+    compile "com.bamboo.packer:packer-helper:$packer_version"
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.android.support:appcompat-v7:25.2.0'
