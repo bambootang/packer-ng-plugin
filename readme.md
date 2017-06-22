@@ -10,7 +10,7 @@
 
 ## 项目介绍
 
-[**packer-ng-plugin**](https://github.com/kerwinT/packer-ng-plugin) 是下一代Android渠道打包工具Gradle插件，支持极速打包，**100**个渠道包只需要**10**秒钟，速度是 [**gradle-packer-plugin**](https://github.com/mcxiaoke/gradle-packer-plugin) 的**300**倍以上，可方便的用于CI系统集成，支持自定义输出目录和最终APK文件名，依赖包： `com.mcxiaoke.gradle:packer-ng:1.0.9` 简短名：`packer`，可以在项目的 `build.gradle` 中指定使用，还提供了命令行独立使用的Java和Python脚本。实现原理见本文末尾。
+[**packer-ng-plugin**](https://github.com/kerwinT/packer-ng-plugin) 是下一代Android渠道打包工具Gradle插件，支持极速打包，**100**个渠道包只需要**10**秒钟，速度是 [**gradle-packer-plugin**](https://github.com/mcxiaoke/gradle-packer-plugin) 的**300**倍以上，可方便的用于CI系统集成，支持自定义输出目录和最终APK文件名，依赖包： `com.bamboo.packer:packer-gradle-plugin:2.0.0`  简短名：`packer`，可以在项目的 `build.gradle` 中指定使用，还提供了命令行独立使用的Java和Python脚本。实现原理见本文末尾。
 
 ## 使用指南
 
@@ -24,7 +24,7 @@ buildscript {
 	......
 	dependencies{
 	// add packer-ng
-		classpath 'com.bamboo.packer:helper:2.0.0'
+		classpath 'com.bamboo.packer:packer-gradle-plugin:2.0.0'
 	}
 }  
 ```
@@ -35,7 +35,7 @@ buildscript {
 apply plugin: 'packer' 
 
 dependencies {
-	compile 'com.mcxiaoke.gradle:packer-helper:2.0.0'
+	compile 'com.bamboo.packer:packer-helper:2.0.0'
 } 
 
 ```
