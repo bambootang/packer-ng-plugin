@@ -3,27 +3,14 @@
 
 ## 特别提示
 
-- **请使用最新版本的PackerNg，如果使用的Android Gradle Plugin版本大于2.2.0，请务必在 `signingConfigs` 里增加 `v2SigningEnabled false` 禁用新版签名模式，详细的说明见这里：[兼容性问题说明](compatibility.md)。**
-
-- **如果你同时使用 [tinker](https://github.com/Tencent/tinker) ，请使用`1.0.9`以后的版本，同时阅读tinker的文档，确保没有兼容问题。**
-
 ## 最新版本
 
-- **v1.0.9 - 2017.03.03** - 获取APK文件路径时优先读取sourceDir
-- **v1.0.8 - 2016.10.20** - 移除对旧版打包工具的扩展属性兼容 
-- **v1.0.7 - 2016.08.09** - 优化签名校验和渠道写入，完善异常处理
-- **v1.0.6 - 2016.08.05** - V2签名模式兼容问题提示，打包脚本优化
-- **v1.0.5 - 2016.05.30** - 签名检查调整为可选，文件名模板支持MD5和SHA1
-- **v1.0.4 - 2016.01.19** - 完善获取APK路径的方法,增加MarketInfo
-- **v1.0.3 - 2016.01.14** - 增加缓存，新增ResUtils，更有好的错误提示
-- **v1.0.2 - 2015.12.04** - 兼容productFlavors，完善异常处理
-- **v1.0.1 - 2015.12.01** - 如果没有读取到渠道，默认返回空字符串
-- **v1.0.0 - 2015.11.30** - 增加Java和Python打包脚本，增加文档
-- **v0.9.9 - 2015.11.26** - 测试版发布，支持全新的极速打包方式 
+- **v2.0.0 - 2017.03.03** - 修改group，添加v2支持，添加多渠道的支持。
+- **v1.0.9 - 2017.03.03** - [查看](https://github.com/mcxiaoke/packer-ng-plugin)
 
 ## 项目介绍
 
-[**packer-ng-plugin**](https://github.com/mcxiaoke/packer-ng-plugin) 是下一代Android渠道打包工具Gradle插件，支持极速打包，**100**个渠道包只需要**10**秒钟，速度是 [**gradle-packer-plugin**](https://github.com/mcxiaoke/gradle-packer-plugin) 的**300**倍以上，可方便的用于CI系统集成，支持自定义输出目录和最终APK文件名，依赖包： `com.mcxiaoke.gradle:packer-ng:1.0.9` 简短名：`packer`，可以在项目的 `build.gradle` 中指定使用，还提供了命令行独立使用的Java和Python脚本。实现原理见本文末尾。
+[**packer-ng-plugin**](https://github.com/kerwinT/packer-ng-plugin) 是下一代Android渠道打包工具Gradle插件，支持极速打包，**100**个渠道包只需要**10**秒钟，速度是 [**gradle-packer-plugin**](https://github.com/mcxiaoke/gradle-packer-plugin) 的**300**倍以上，可方便的用于CI系统集成，支持自定义输出目录和最终APK文件名，依赖包： `com.mcxiaoke.gradle:packer-ng:1.0.9` 简短名：`packer`，可以在项目的 `build.gradle` 中指定使用，还提供了命令行独立使用的Java和Python脚本。实现原理见本文末尾。
 
 ## 使用指南
 
@@ -37,7 +24,7 @@ buildscript {
 	......
 	dependencies{
 	// add packer-ng
-		classpath 'com.bamboo.packer:helper:1.0.9'
+		classpath 'com.bamboo.packer:helper:2.0.0'
 	}
 }  
 ```
@@ -48,21 +35,9 @@ buildscript {
 apply plugin: 'packer' 
 
 dependencies {
-	compile 'com.mcxiaoke.gradle:packer-helper:1.0.9'
+	compile 'com.mcxiaoke.gradle:packer-helper:2.0.0'
 } 
 
- android {
-    //...
-    signingConfigs {
-      release {
-      	// 满足下面两个条件时需要此配置
-      	// 1. Gradle版本 >= 2.14.1
-      	// 2. Android Gradle Plugin 版本 >= 2.2.0
-      	// 作用是只使用旧版签名，禁用V2版签名模式
-        v2SigningEnabled false 
-      }
-    }
-  }
 ```
 
 **注意：`packer-ng` 和 `packer-helper` 的版本号需要保持一致**
@@ -84,13 +59,6 @@ MobclickAgent.startWithConfigure(new MobclickAgent.UMAnalyticsConfig(context, um
 
 ### Gradle打包说明
 
-可以通过两种方式指定 `market` 属性，根据需要选用：
-
-- 打包时命令行使用 `-Pmarket= yourMarketFilePath` 指定属性
-- 在 `gradle.properties` 里加入 `market=yourMarketFilePath`
-
-market是你的渠道名列表文件，market文件是基于**项目根目录**的 `相对路径` ，假设你的项目位于 `~/github/myapp` 你的market文件位于 `~/github/myapp/config/markets.txt` 那么参数应该是 `-Pmarket=config/markets.txt`，一般建议直接放在项目根目录，如果market文件参数错误或者文件不存在会抛出异常。
-
 渠道名列表文件是纯文本文件，每行一个渠道号，列表解析的时候会自动忽略空白行和格式不规范的行，请注意看命令行输出，渠道名和注释之间用 `#` 号分割开，可以没有注释，示例：
 
 ```
@@ -100,12 +68,6 @@ market是你的渠道名列表文件，market文件是基于**项目根目录**�
  HelloWorld
 ```
 
-渠道打包的Gradle命令行参数格式示例（在项目根目录执行）：  
-
-```shell
-./gradlew -Pmarket=markets.txt clean apkRelease
-``` 
-
 打包完成后你可以在 `${项目根目录}/build/archives/` 目录找到最终的渠道包。
 
 #### 任务说明
@@ -113,49 +75,6 @@ market是你的渠道名列表文件，market文件是基于**项目根目录**�
 渠道打包的Gradle Task名字是 `apk${buildType}` buildType一般是release，也可以是你自己指定的beta或者someOtherType，使用时首字母需要大写，例如release的渠道包任务名是 `apkRelease`，beta的渠道包任务名是 `apkBeta`，其它的以此类推。
 
 #### 注意事项
-
-**不支持`productFlavors`中定义的条件编译变量，不支持修改AndroidManifest**
-
-如果你的项目有多个`productFlavors`，默认只会用第一个`flavor`生成的APK文件作为打包工具的输入参数，忽略其它`flavor`生成的apk，代码里用的是 `theVariant.outputs[0].outputFile`。如果你想指定使用某个flavor来生成渠道包，可以用 `apkFlavor1Release`，`apkFlavor2Beta`这样的名字，示例（假设flavor名字是Intel）：
-
-```shell
-./gradlew -Pmarket=markets.txt clean apkIntelRelease
-``` 
-
-### 命令行打包说明
-
-**特别提示：如果你同时使用其它的资源压缩工具或应用加固功能，请使用命令行脚本打包增加渠道信息，增加渠道信息需要放在APK处理过程的最后一步。**
-
-如果不想使用Gradle插件，这里还有两个命令行打包脚本，在项目的 `tools` 目录里，分别是 `PackerNg-1.0.9.jar` 和 `PackerNg-1.0.9.py`，使用命令行打包工具，在Java代码里仍然是使用`helper`包里的 `PackerNg.getMarket(Context)` 读取渠道。
-
-#### Java脚本
-
-```shell
-java -jar PackerNg-x.x.x.jar apkFile marketFile outputDir
-```
-
-#### Python脚本
-
-```shell
-usage: PackerNg-1.0.9.py [-h] [-f [FORMAT]] [-s] [-t TEST]
-                         [apkfile] [marketfile] [output]
-
-positional arguments:
-  apkfile               original release apk file path (required)
-  marketfile            markets file path [default: ./markets.txt]
-  output                archives output path [default: ./archives]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -f [FORMAT], --format [FORMAT]
-                        archive format [default:'${name}-${package}-v${vname}-
-                        ${vcode}-${market}${ext}']
-  -s, --show            show apk file info (pkg/market/version)
-  -t TEST, --test TEST  perform serval times packer-ng test
-```
-
-#### 不使用Gradle
-使用命令行打包脚本，不想添加Gradle依赖的，可以完全忽略Gradle的配置，直接复制 [PackerNg.java](helper/src/main/java/com/mcxiaoke/packer/helper/PackerNg.java) 到项目中使用即可。
 
 ### 插件配置说明（可选） 
 
@@ -240,24 +159,6 @@ static final byte[] MAGIC = new byte[]{0x21, 0x5a, 0x58, 0x4b, 0x21}; //!ZXK!
 ------
 
 ## 关于作者
-
-#### 联系方式
-* Blog: <http://blog.mcxiaoke.com>
-* Github: <https://github.com/mcxiaoke>
-* Email: [github@mcxiaoke.com](mailto: github@mcxiaoke.com)
-
-#### 开源项目
-
-* Rx文档中文翻译: <https://github.com/mcxiaoke/RxDocs>
-* MQTT协议中文版: <https://github.com/mcxiaoke/mqtt>
-* Awesome-Kotlin: <https://github.com/mcxiaoke/awesome-kotlin>
-* Kotlin-Koi: <https://github.com/mcxiaoke/kotlin-koi>
-* Next公共组件库: <https://github.com/mcxiaoke/Android-Next>
-* Gradle渠道打包: <https://github.com/mcxiaoke/gradle-packer-plugin>
-* EventBus实现xBus: <https://github.com/mcxiaoke/xBus>
-* 蘑菇饭App: <https://github.com/mcxiaoke/minicat>
-* 饭否客户端: <https://github.com/mcxiaoke/fanfouapp-opensource>
-* Volley镜像: <https://github.com/mcxiaoke/android-volley>
 
 ------
 
