@@ -16,7 +16,7 @@ apply plugin: 'maven'
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-version = '1.1.0'
+version = '2.0.0'
 group = 'com.bamboo.packer'
 
 dependencies {
@@ -43,5 +43,4 @@ uploadArchives {
     }
 }
 // apply from: '../jar.gradle'
-//apply from: '../gradle-mvn-push.gradle'
-//apply from: '../gradle/java_publish.gradle'
+apply from: '../gradle/java_publish.gradle'
